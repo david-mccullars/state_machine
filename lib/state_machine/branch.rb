@@ -165,7 +165,8 @@ module StateMachine
             e.node_one == from_state && e.node_two == to_state
           end if options[:collapse_edges]
           if existing_edge
-            existing_edge['label'].source << ",\n" << event.to_s
+            delim = ",\n"
+            existing_edge['label'] = existing_edge['label'].source.split(delim).push(event.to_s).sort.uniq.join(delim)
           else
             edges << graph.add_edge(from_state, to_state, :label => event.to_s)
           end
