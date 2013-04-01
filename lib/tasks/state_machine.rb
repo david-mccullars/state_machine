@@ -8,6 +8,7 @@ namespace :state_machine do
     options[:format] = ENV['FORMAT'] if ENV['FORMAT']
     options[:font] = ENV['FONT'] if ENV['FONT']
     options[:orientation] = ENV['ORIENTATION'] if ENV['ORIENTATION']
+    options[:collapse_edges] = ENV['COLLAPSE_EDGES'] == 'true'
     
     if defined?(Rails)
       puts "Files are automatically loaded in Rails; ignoring FILE option" if options.delete(:file)

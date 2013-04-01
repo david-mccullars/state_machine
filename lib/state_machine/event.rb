@@ -194,9 +194,9 @@ module StateMachine
     # configured.
     # 
     # A collection of the generated edges will be returned.
-    def draw(graph)
+    def draw(graph, options={})
       valid_states = machine.states.by_priority.map {|state| state.name}
-      branches.collect {|branch| branch.draw(graph, name, valid_states)}.flatten
+      branches.collect {|branch| branch.draw(graph, name, valid_states, options)}.flatten
     end
     
     # Generates a nicely formatted description of this event's contents.

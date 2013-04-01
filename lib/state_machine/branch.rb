@@ -142,7 +142,7 @@ module StateMachine
     # transition.
     # 
     # The collection of edges generated on the graph will be returned.
-    def draw(graph, event, valid_states)
+    def draw(graph, event, valid_states, options={})
       state_requirements.inject([]) do |edges, state_requirement|
         # From states determined based on the known valid states
         from_states = state_requirement[:from].filter(valid_states)
@@ -160,7 +160,15 @@ module StateMachine
         # Generate an edge between each from and to state
         from_states.each do |from_state|
           from_state = from_state ? from_state.to_s : 'nil'
-          edges << graph.add_edge(from_state, loopback ? from_state : to_state, :label => event.to_s)
+          to_state = loopback ? from_state : to_state
+          existing_edge = graph.each_edge.detect do |e|
+            e.node_one == from_state && e.node_two == to_state
+          end if options[:collapse_edges]
+          if existing_edge
+            existing_edge['label'].source << ",\n" << event.to_s
+          else
+            edges << graph.add_edge(from_state, to_state, :label => event.to_s)
+          end
         end
         
         edges

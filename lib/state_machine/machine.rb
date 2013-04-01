@@ -1863,6 +1863,8 @@ module StateMachine
     #   Default is "Arial".
     # * <tt>:orientation</tt> - The direction of the graph ("portrait" or
     #   "landscape").  Default is "portrait".
+    # * <tt>:collapse_edges</tt> - Whether to combine multiple edges joining
+    #   the same two nodes into one.  Default is false.
     # * <tt>:output</tt> - Whether to generate the output of the graph
     def draw(options = {})
       options = {
@@ -1870,9 +1872,10 @@ module StateMachine
         :path => '.',
         :format => 'png',
         :font => 'Arial',
-        :orientation => 'portrait'
+        :orientation => 'portrait',
+        :collapse_edges => false,
       }.merge(options)
-      assert_valid_keys(options, :name, :path, :format, :font, :orientation)
+      assert_valid_keys(options, :name, :path, :format, :font, :orientation, :collapse_edges)
       
       begin
         # Load the graphviz library
@@ -1890,7 +1893,7 @@ module StateMachine
         
         # Add edges
         events.each do |event|
-          edges = event.draw(graph)
+          edges = event.draw(graph, :collapse_edges => options[:collapse_edges])
           edges.each {|edge| edge.fontname = options[:font]}
         end
         
